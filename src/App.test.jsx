@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 
@@ -7,37 +7,36 @@ it("adds jokes to the correct list", async () => {
 
   render(<App />);
 
-  const getJokeBtn = screen.getByRole("button", { name: /get joke/i });
+  const getJokeBtn = screen.getAllByRole("button", { name: /get dad joke/i });
 
   await user.click(getJokeBtn);
 
   // These buttons are rendered after the first joke is fetched
-  let goodJokeBtn = await screen.findByRole("button", { name: "👍🏾" });
-  let badJokeBtn = await screen.findByRole("button", { name: "👎🏾" });
+  let goodJokeBtn = await screen.findByRole("button", { name: "Good Joke 👍" });
+  let badJokeBtn = await screen.findByRole("button", { name: "Bad Joke 👎" });
 
   // First is 👍🏾, second is 👎🏾
-  const jokeLists = screen.getAllByRole("list");
 
   // Add 3 goods and 2 bads
-  await user.click(goodJokeBtn);
+  await fireEvent.click(goodJokeBtn);
 
-  await user.click(getJokeBtn);
+  await fireEvent.click(getJokeBtn);
 
   // Keep awaiting these buttons to come back after we click the get joke button
-  goodJokeBtn = await screen.findByRole("button", { name: "👍🏾" });
-  await user.click(goodJokeBtn);
+  goodJokeBtn = await screen.getByRole("button", { name: "Good Joke 👍" });
+  await fireEvent.click(goodJokeBtn);
 
-  await user.click(getJokeBtn);
-  goodJokeBtn = await screen.findByRole("button", { name: "👍🏾" });
-  await user.click(goodJokeBtn);
+  await fireEvent.click(getJokeBtn);
+  goodJokeBtn = await screen.getByRole("button", { name: "Good Joke 👍" });
+  await fireEvent.click(goodJokeBtn);
 
-  await user.click(getJokeBtn);
-  badJokeBtn = await screen.findByRole("button", { name: "👎🏾" });
-  await user.click(badJokeBtn);
+  await fireEvent.click(getJokeBtn);
+  badJokeBtn = await screen.getByRole("button", { name: "Bad Joke 👎" });
+  await fireEvent.click(badJokeBtn);
 
-  await user.click(getJokeBtn);
-  badJokeBtn = await screen.findByRole("button", { name: "👎🏾" });
-  await user.click(badJokeBtn);
+  await fireEvent.click(getJokeBtn);
+  badJokeBtn = await screen.getByRole("button", { name: "Bad Joke 👎" });
+  await fireEvent.click(badJokeBtn);
 
   const goodJokeItems = within(jokeLists[0]).getAllByRole("listitem");
   const badJokeItems = within(jokeLists[1]).getAllByRole("listitem");
